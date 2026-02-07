@@ -10,6 +10,29 @@ public class Solver
         return s[..half] == s[half..];
     }
 
+    public static bool IsRepeated(long n)
+    {
+        var s = n.ToString();
+        for (int d = 1; d <= s.Length / 2; d++)
+        {
+            if (s.Length % d != 0) continue;
+            int reps = s.Length / d;
+            if (reps < 2) continue;
+            var pattern = s[..d];
+            bool match = true;
+            for (int i = 1; i < reps; i++)
+            {
+                if (s[(i * d)..((i + 1) * d)] != pattern)
+                {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) return true;
+        }
+        return false;
+    }
+
     public static (long Part1, long Part2) Solve(string input)
     {
         var cleaned = input.Trim().Replace("\n", "").Replace("\r", "");
@@ -29,10 +52,8 @@ public class Solver
 
             for (var n = start; n <= end; n++)
             {
-                if (IsDouble(n))
-                {
-                    part1 += n;
-                }
+                if (IsDouble(n)) part1 += n;
+                if (IsRepeated(n)) part2 += n;
             }
         }
 

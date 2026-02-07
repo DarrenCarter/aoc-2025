@@ -2,49 +2,44 @@ namespace Day3;
 
 public class Solver
 {
-    public static (int Part1, int Part2) Solve(string input)
+    public static long MaxJoltage(string line, int pick)
+    {
+        int actualPick = Math.Min(pick, line.Length);
+        var result = new List<char>(actualPick);
+        int start = 0;
+        for (int i = 0; i < actualPick; i++)
+        {
+            int end = line.Length - (actualPick - i - 1);
+            int bestIdx = start;
+            for (int j = start + 1; j < end; j++)
+            {
+                if (line[j] > line[bestIdx]) bestIdx = j;
+            }
+            result.Add(line[bestIdx]);
+            start = bestIdx + 1;
+        }
+        long value = 0;
+        foreach (var ch in result)
+        {
+            value = value * 10 + (ch - '0');
+        }
+        return value;
+    }
+
+    public static (long Part1, long Part2) Solve(string input)
     {
         var lines = input.Trim().Split('\n', StringSplitOptions.RemoveEmptyEntries);
 
-        int part1 = 0;
-        int part2 = 0;
+        long part1 = 0;
+        long part2 = 0;
 
         foreach (var rawLine in lines)
         {
             var line = rawLine.Trim();
             if (line.Length == 0) continue;
 
-            // Part 1: pick 2 batteries (i < j) to maximize 10*digit[i] + digit[j]
-            int best2 = 0;
-            for (int i = 0; i < line.Length; i++)
-            {
-                int d1 = line[i] - '0';
-                for (int j = i + 1; j < line.Length; j++)
-                {
-                    int d2 = line[j] - '0';
-                    int v = d1 * 10 + d2;
-                    if (v > best2) best2 = v;
-                }
-            }
-            part1 += best2;
-
-            // Part 2: pick 3 batteries (i < j < k)
-            int best3 = 0;
-            for (int i = 0; i < line.Length; i++)
-            {
-                int d1 = line[i] - '0';
-                for (int j = i + 1; j < line.Length; j++)
-                {
-                    int d2 = line[j] - '0';
-                    for (int k = j + 1; k < line.Length; k++)
-                    {
-                        int d3 = line[k] - '0';
-                        int v = d1 * 100 + d2 * 10 + d3;
-                        if (v > best3) best3 = v;
-                    }
-                }
-            }
-            part2 += best3;
+            part1 += MaxJoltage(line, 2);
+            part2 += MaxJoltage(line, 12);
         }
 
         return (part1, part2);

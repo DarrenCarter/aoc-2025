@@ -7,6 +7,6 @@ class Day2Test {
         val input = this::class.java.getResource("/example.txt")!!.readText()
         val (part1, part2) = solve(input)
         assertEquals(1227775554L, part1, "Part 1")
-        // Part 2 not yet available
+        assertEquals(4174379265L, part2, "Part 2")
     }
 }

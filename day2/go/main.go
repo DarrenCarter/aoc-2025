@@ -16,9 +16,33 @@ func isDouble(n int64) bool {
 	return s[:half] == s[half:]
 }
 
+func isRepeated(n int64) bool {
+	s := strconv.FormatInt(n, 10)
+	for d := 1; d <= len(s)/2; d++ {
+		if len(s)%d != 0 {
+			continue
+		}
+		reps := len(s) / d
+		if reps < 2 {
+			continue
+		}
+		pattern := s[:d]
+		match := true
+		for i := 1; i < reps; i++ {
+			if s[i*d:(i+1)*d] != pattern {
+				match = false
+				break
+			}
+		}
+		if match {
+			return true
+		}
+	}
+	return false
+}
+
 func Solve(input string) (int64, int64) {
 	input = strings.TrimSpace(input)
-	// Replace newlines with nothing to handle multi-line input
 	input = strings.ReplaceAll(input, "\n", "")
 	input = strings.ReplaceAll(input, "\r", "")
 
@@ -50,6 +74,9 @@ func Solve(input string) (int64, int64) {
 		for n := start; n <= end; n++ {
 			if isDouble(n) {
 				part1 += n
+			}
+			if isRepeated(n) {
+				part2 += n
 			}
 		}
 	}

@@ -16,5 +16,7 @@ func TestSolve(t *testing.T) {
 	if part1 != 1227775554 {
 		t.Errorf("Part 1: got %d, want 1227775554", part1)
 	}
-	_ = part2 // Part 2 not yet available
+	if part2 != 4174379265 {
+		t.Errorf("Part 2: got %d, want 4174379265", part2)
+	}
 }

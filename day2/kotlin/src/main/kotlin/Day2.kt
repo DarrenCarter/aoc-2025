@@ -7,6 +7,20 @@ fun isDouble(n: Long): Boolean {
     return s.substring(0, half) == s.substring(half)
 }
 
+fun isRepeated(n: Long): Boolean {
+    val s = n.toString()
+    for (d in 1..s.length / 2) {
+        if (s.length % d != 0) continue
+        val reps = s.length / d
+        if (reps < 2) continue
+        val pattern = s.substring(0, d)
+        if ((1 until reps).all { s.substring(it * d, (it + 1) * d) == pattern }) {
+            return true
+        }
+    }
+    return false
+}
+
 fun solve(input: String): Pair<Long, Long> {
     val cleaned = input.trim().replace("\n", "").replace("\r", "")
     val ranges = cleaned.split(",").map { it.trim() }.filter { it.isNotEmpty() }
@@ -22,9 +36,8 @@ fun solve(input: String): Pair<Long, Long> {
         val end = range.substring(dashIdx + 1).trim().toLong()
 
         for (n in start..end) {
-            if (isDouble(n)) {
-                part1 += n
-            }
+            if (isDouble(n)) part1 += n
+            if (isRepeated(n)) part2 += n
         }
     }
 
