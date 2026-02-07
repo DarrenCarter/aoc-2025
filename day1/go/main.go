@@ -6,20 +6,8 @@ import (
 	"strings"
 )
 
-func main() {
-	if len(os.Args) < 2 {
-		fmt.Fprintf(os.Stderr, "Usage: %s <input-file>\n", os.Args[0])
-		os.Exit(1)
-	}
-
-	data, err := os.ReadFile(os.Args[1])
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading file: %v\n", err)
-		os.Exit(1)
-	}
-
-	input := strings.TrimSpace(string(data))
-	// Handle both newline-separated and comma-separated formats
+func Solve(input string) (int, int) {
+	input = strings.TrimSpace(input)
 	input = strings.ReplaceAll(input, ",", "\n")
 	parts := strings.Split(input, "\n")
 
@@ -67,6 +55,22 @@ func main() {
 		}
 	}
 
+	return part1, part2
+}
+
+func main() {
+	if len(os.Args) < 2 {
+		fmt.Fprintf(os.Stderr, "Usage: %s <input-file>\n", os.Args[0])
+		os.Exit(1)
+	}
+
+	data, err := os.ReadFile(os.Args[1])
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error reading file: %v\n", err)
+		os.Exit(1)
+	}
+
+	part1, part2 := Solve(string(data))
 	fmt.Println("Part 1:", part1)
 	fmt.Println("Part 2:", part2)
 }

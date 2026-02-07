@@ -1,0 +1,21 @@
+# Puzzle inputs (personal per AoC rules)
+input.txt
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+vendor/
+
+# Kotlin
+.gradle/
+build/
+*.class
+*.jar
+
+# C#
+bin/
+obj/
+*.exe
