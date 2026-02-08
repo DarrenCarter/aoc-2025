@@ -6,6 +6,19 @@ import (
 	"strings"
 )
 
+var dirs = [][2]int{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}
+
+func countNeighbors(grid [][]byte, r, c, rows, cols int) int {
+	n := 0
+	for _, d := range dirs {
+		nr, nc := r+d[0], c+d[1]
+		if nr >= 0 && nr < rows && nc >= 0 && nc < cols && grid[nr][nc] == '@' {
+			n++
+		}
+	}
+	return n
+}
+
 func Solve(input string) (int, int) {
 	input = strings.TrimSpace(input)
 	lines := strings.Split(input, "\n")
@@ -16,33 +29,39 @@ func Solve(input string) (int, int) {
 		cols = len(lines[0])
 	}
 
-	isRoll := func(r, c int) bool {
-		if r < 0 || r >= rows || c < 0 || c >= cols {
-			return false
-		}
-		return lines[r][c] == '@'
+	grid := make([][]byte, rows)
+	for i, line := range lines {
+		grid[i] = []byte(line)
 	}
 
+	// Part 1: count rolls with fewer than 4 neighbors
 	part1 := 0
-	part2 := 0
-
-	dirs := [][2]int{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}
-
 	for r := 0; r < rows; r++ {
 		for c := 0; c < cols; c++ {
-			if lines[r][c] != '@' {
-				continue
-			}
-			neighbors := 0
-			for _, d := range dirs {
-				if isRoll(r+d[0], c+d[1]) {
-					neighbors++
-				}
-			}
-			if neighbors < 4 {
+			if grid[r][c] == '@' && countNeighbors(grid, r, c, rows, cols) < 4 {
 				part1++
 			}
 		}
+	}
+
+	// Part 2: iteratively remove accessible rolls until none remain
+	part2 := 0
+	for {
+		var toRemove [][2]int
+		for r := 0; r < rows; r++ {
+			for c := 0; c < cols; c++ {
+				if grid[r][c] == '@' && countNeighbors(grid, r, c, rows, cols) < 4 {
+					toRemove = append(toRemove, [2]int{r, c})
+				}
+			}
+		}
+		if len(toRemove) == 0 {
+			break
+		}
+		for _, pos := range toRemove {
+			grid[pos[0]][pos[1]] = '.'
+		}
+		part2 += len(toRemove)
 	}
 
 	return part1, part2
